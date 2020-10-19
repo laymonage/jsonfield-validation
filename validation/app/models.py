@@ -1,5 +1,6 @@
 import uuid
 
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -21,3 +22,8 @@ class Smartphone(Product):
 class Notebook(Product):
     cpu = models.CharField(max_length=255)
     gpu = models.CharField(max_length=255)
+
+
+class Cart(models.Model):
+    user = models.OneToOneField(User)
+    products = models.JSONField()
