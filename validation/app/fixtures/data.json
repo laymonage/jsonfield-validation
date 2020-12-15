@@ -1,0 +1,81 @@
+[
+  {
+    "model": "app.product",
+    "pk": "11f890f3-2a15-4228-835f-9d8f0585a411",
+    "fields": {
+      "name": "Tablet A",
+      "price": "799.99",
+      "stock_qty": 40,
+      "data": {
+        "soc": "SD800",
+        "ram": 8,
+        "screen": 11.0
+      }
+    }
+  },
+  {
+    "model": "app.product",
+    "pk": "3c3d9884-21d3-42da-ba19-dd6c156d21fa",
+    "fields": {
+      "name": "Phone B",
+      "price": "299.99",
+      "stock_qty": 100,
+      "data": {
+        "soc": "SD700",
+        "nfc": false
+      }
+    }
+  },
+  {
+    "model": "app.product",
+    "pk": "ad28e44d-470d-4718-bcb3-d4648989094c",
+    "fields": {
+      "name": "Phone A",
+      "price": "1199.99",
+      "stock_qty": 20,
+      "data": {
+        "soc": "SD999",
+        "nfc": true
+      }
+    }
+  },
+  {
+    "model": "app.product",
+    "pk": "f852b6ab-f928-48c8-b3cd-20102fede2c4",
+    "fields": {
+      "name": "Notebook A",
+      "price": "2199.99",
+      "stock_qty": 70,
+      "data": {
+        "cpu": "i8 9800",
+        "ram": 16
+      }
+    }
+  },
+  {
+    "model": "app.cart",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "products": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$216000$AN9jWnGPGpup$4W+xk1318UPCHDdUyCFQ5yK9Uc1MMNP3XcESBu8N2ug=",
+      "last_login": null,
+      "is_superuser": true,
+      "username": "admin",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2020-12-15T08:42:50.205",
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]
