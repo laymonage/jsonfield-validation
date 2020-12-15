@@ -1,20 +1,6 @@
 from django.core.exceptions import ValidationError
-from django.db.models import Q
-
-def add_product_to_cart(product, cart):
-    for p in cart.products:
-        if product.id == p['id']:
-            p['quantity'] += 1
-            break
-    else:
-        product_data = {
-            'id': product.id,
-            'type': type(product).__name__.lower(),
-            'name': product.name,
-            'price': product.price,
-            'quantity': 1,
-        }
-        cart.products.append(product_data)
+from django.db import models
+from django.db.models.functions import Cast
 
 
 def validate_cart_products_list(products):
@@ -23,24 +9,19 @@ def validate_cart_products_list(products):
 
 
 def validate_cart_product_ids_exist(products):
-    from .models import Smartphone, Notebook
-    models = {
-        'smartphone': Smartphone,
-        'notebook': Notebook,
-    }
-    model_ids = {
-        'smartphone': [],
-        'notebook': [],
-    }
+    if not isinstance(products, list):
+        return
 
-    for product in products:
-        model_ids[product['type']].append(product['id'])
+    from .models import Product
+    product_ids = [product['id'] for product in products]
 
-    for name, model in models.items():
-        query = model.objects.filter(id__in=model_ids[name])
-        valid_ids = query.values_list('id', flat=True)
-        invalid_ids = set(valid_ids) - set(model_ids[name])
-        if invalid_ids:
-            raise ValidationError(
-                f'Invalid IDs found for {name}: {invalid_ids}'
-            )
+    query = Product.objects.filter(id__in=product_ids)
+    valid_ids = query.annotate(
+        id_str=Cast('id', output_field=models.CharField())
+    ).values_list('id_str', flat=True)
+
+    invalid_ids = set(product_ids) - set(valid_ids)
+    if invalid_ids:
+        raise ValidationError(
+            f'Invalid IDs found: {invalid_ids}'
+        )

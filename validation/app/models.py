@@ -11,30 +11,36 @@ class Product(models.Model):
     name = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=9, decimal_places=2)
     stock_qty = models.PositiveIntegerField()
-
-    class Meta:
-        abstract = True
+    data = models.JSONField(default=dict, blank=True)
 
     def __str__(self):
         return f'{self.name} (Stock: {self.stock_qty})'
 
 
-class Smartphone(Product):
-    chipset = models.CharField(max_length=255)
-    nfc = models.BooleanField()
-
-
-class Notebook(Product):
-    cpu = models.CharField(max_length=255)
-    gpu = models.CharField(max_length=255)
-
-
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     products = models.JSONField(
+        default=list,
+        blank=True,
         validators=[
             validate_cart_products_list,
             validate_cart_product_ids_exist,
         ],
-        blank=True,
     )
+
+    def __str__(self):
+        return f'{self.user.username} ({len(self.products)} kinds)'
+
+    def add_product(self, product):
+        for existing in self.products:
+            if existing['id'] == product.id.hex:
+                existing['quantity'] += 1
+                break
+        else:
+            product_data = {
+                'id': product.id.hex,
+                'name': product.name,
+                'price': float(product.price),
+                'quantity': 1,
+            }
+            self.products.append(product_data)
