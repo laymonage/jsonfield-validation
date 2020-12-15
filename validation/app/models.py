@@ -3,6 +3,8 @@ import uuid
 from django.contrib.auth.models import User
 from django.db import models
 
+from .utils import validate_cart_products_list, validate_cart_product_ids_exist
+
 
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -12,6 +14,9 @@ class Product(models.Model):
 
     class Meta:
         abstract = True
+
+    def __str__(self):
+        return f'{self.name} (Stock: {self.stock_qty})'
 
 
 class Smartphone(Product):
@@ -25,5 +30,11 @@ class Notebook(Product):
 
 
 class Cart(models.Model):
-    user = models.OneToOneField(User)
-    products = models.JSONField()
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    products = models.JSONField(
+        validators=[
+            validate_cart_products_list,
+            validate_cart_product_ids_exist,
+        ],
+        blank=True,
+    )
